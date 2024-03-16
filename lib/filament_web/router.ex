@@ -25,7 +25,7 @@ defmodule FilamentWeb.Router do
     live "/pets/:id", PetLive.Show, :show
     live "/pets/:id/show/edit", PetLive.Show, :edit
 
-    live "/admin/pets", FilamentLive
+    live "/admin/:resource", FilamentLive
   end
 
   # Other scopes may use custom stacks.

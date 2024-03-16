@@ -31,6 +31,7 @@ defmodule FilamentWeb.PetLive.FormComponent do
 
   @impl true
   def update(%{pet: pet} = assigns, socket) do
+    dbg(pet)
     changeset = Pets.change_pet(pet)
 
     {:ok,

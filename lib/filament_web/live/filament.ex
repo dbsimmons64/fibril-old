@@ -1,46 +1,42 @@
 defmodule FilamentWeb.FilamentLive do
-  alias FilamentWeb.PetLive.FormComponent
   use FilamentWeb, :live_view
 
-  alias FilamentWeb.FilamentHelpers
   alias Filament.Schema
 
   @impl true
-  def mount(_params, _session, socket) do
-    opts = %{
-      schema: Filament.Pets.Pet,
-      changeset: &Filament.Pets.Pet.changeset/2,
-      fields: [:name, :date_of_birth]
-    }
+  @spec mount(any(), any(), map()) :: {:ok, map()}
+  def mount(%{"resource" => resource}, _session, socket) do
+    module = Module.concat(["FilamentWeb.Filament.Resourcces", resource])
+    opts = apply(module, :options, [])
 
-    fields = Schema.get_metadata_for_fields(opts.fields, opts.schema) |> dbg()
+    # mod = Module.concat(["FilamentWeb.Filament.Resourcces", "Pets"])
+    # mod = Module.concat(["FilamentWeb.Filament.Resourcces", :Pets])
+    # apply(mod, :welcome, []) |> dbg()
 
-    struct = apply(opts.schema, :__struct__, [])
-    # apply(opts.schema, :changeset, [struct, %{}]) |> dbg()
-
-    changeset = opts.changeset.(struct, %{})
-    socket = assign(socket, :form, to_form(changeset))
-
-    # fields = apply(Filament.Pets.Pet, :__schema__, [:fields])
-
-    schema =
-      Enum.map(fields, fn field ->
-        %{name: field, type: apply(Filament.Pets.Pet, :__schema__, [:type, field])}
-      end)
-
-    html =
-      Enum.map(schema, fn field ->
-        FilamentHelpers.html_input(socket.assigns, field)
-      end)
+    struct = Schema.get_struct(opts.module)
+    fields = Schema.get_metadata_for_fields(opts.fields, opts.module)
+    changeset = Schema.get_changeset(opts.module, opts[:changeset], struct, %{})
 
     {:ok,
      socket
      |> assign(:title, "Welcome to Pets Admin")
      |> assign(:fields, fields)
-     |> assign(:html, html)}
+     |> assign(:form, to_form(changeset, as: "filament"))
+     |> assign(:struct, struct)
+     |> assign(:opts, opts)}
   end
 
-  # Module.concat() #
-
   @impl true
+  def handle_event("validate", %{"filament" => pet_params} = params, socket) do
+    changeset =
+      Schema.get_changeset(
+        socket.assigns.opts.module,
+        socket.assigns.opts[:changeset],
+        socket.assigns.struct,
+        pet_params
+      )
+      |> Map.put(:action, :validate)
+
+    {:noreply, assign(socket, :form, to_form(changeset, as: "filament"))}
+  end
 end

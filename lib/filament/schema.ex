@@ -34,4 +34,16 @@ defmodule Filament.Schema do
   def to_html_type(type) do
     type
   end
+
+  def get_struct(module) do
+    apply(module, :__struct__, [])
+  end
+
+  def get_changeset(module, changeset, struct, attrs) when changeset == nil do
+    apply(module, :changeset, [struct, attrs])
+  end
+
+  def get_changeset(module, changeset, struct, attrs) do
+    apply(module, changeset, [struct, attrs])
+  end
 end
