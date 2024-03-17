@@ -5,6 +5,7 @@ defmodule Filament.Repo.Migrations.CreatePets do
     create table(:pets) do
       add :name, :string
       add :date_of_birth, :date
+      add :type, :string
 
       timestamps(type: :utc_datetime)
     end

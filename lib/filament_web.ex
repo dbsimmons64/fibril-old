@@ -85,6 +85,7 @@ defmodule FilamentWeb do
       import Phoenix.HTML
       # Core UI components and translation
       import FilamentWeb.CoreComponents
+      import FilamentWeb.FilamentComponents
       import FilamentWeb.Gettext
 
       # Shortcut for generating JS commands

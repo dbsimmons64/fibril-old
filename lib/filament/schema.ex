@@ -1,6 +1,7 @@
 defmodule Filament.Schema do
   def get_metadata_for_fields(fields, schema) do
     Enum.map(fields, fn field ->
+      dbg(field)
       get_metadata_for_field(field, schema)
     end)
   end
