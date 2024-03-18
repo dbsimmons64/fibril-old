@@ -1,12 +1,10 @@
-defmodule FilamentWeb.Filament.Resourcces.Pets do
-  import Ecto.Query, warn: false
+Filament is a library that was heavily inspired by its namesake in the PHP world. 
 
-  def welcome() do
-    "Hello from Pets"
-  end
+This section is basicallly to note down all my ideas so I don't forget them.
 
-  def options() do
-    %{
+Example of a Form
+```
+%{
       module: Filament.Pets.Pet,
       fields: [
         :name,
@@ -29,12 +27,4 @@ defmodule FilamentWeb.Filament.Resourcces.Pets do
       ],
       changeset: :name_changeset
     }
-  end
-
-  def not_first() do
-    from(
-      a in Filament.Owners.Owner,
-      where: a.id > 1
-    )
-  end
-end
+```

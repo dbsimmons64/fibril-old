@@ -11,16 +11,8 @@ defmodule FilamentWeb.FilamentComponents do
   end
 
   def filament_input(%{type: :association} = assigns) do
-    # struct = apply(assigns.filament.association, :__struct__, [])
-    name = assigns.filament.value
-
-    options =
-      assigns.filament.association.queryable
-      |> Ecto.Query.select([a], {field(a, ^name), a.id})
-      |> Repo.all()
-
     ~H"""
-    <.input field={@field} type="select" options={options} label={@label} />
+    <.input field={@field} type="select" options={fetch_options(assigns)} label={@label} />
     """
   end
 
@@ -45,5 +37,21 @@ defmodule FilamentWeb.FilamentComponents do
     |> Atom.to_string()
     |> String.capitalize()
     |> String.replace("_", " ")
+  end
+
+  def fetch_options(assigns) do
+    name = assigns.filament.value
+
+    query =
+      if assigns.filament[:queryable] do
+        assigns.filament.queryable.() |> dbg()
+      else
+        assigns.filament.assocation.queryable
+      end
+
+    query
+    |> Ecto.Query.select([a], {field(a, ^name), a.id})
+    |> Repo.all()
+    |> dbg
   end
 end

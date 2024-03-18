@@ -9,7 +9,15 @@ defmodule Filament.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+
+      # Docs
+      name: "Filament Admin Generator",
+      source_url: "https://github.com/USER/PROJECT",
+      homepage_url: "http://YOUR_PROJECT_HOMEPAGE",
+      docs: [
+        extras: ["guides/Introduction.md"]
+      ]
     ]
   end
 
@@ -57,7 +65,8 @@ defmodule Filament.MixProject do
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
-      {:bandit, "~> 1.2"}
+      {:bandit, "~> 1.2"},
+      {:ex_doc, "~> 0.31", only: :dev, runtime: false}
     ]
   end
 

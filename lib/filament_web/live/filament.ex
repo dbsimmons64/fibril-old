@@ -11,7 +11,7 @@ defmodule FilamentWeb.FilamentLive do
     opts = apply(module, :options, [])
 
     struct = Schema.get_struct(opts.module)
-    fields = Schema.get_metadata_for_fields(opts.fields, opts.module)
+    fields = Schema.get_metadata_for_fields(opts.fields, opts.module) |> dbg
     changeset = Schema.get_changeset(opts.module, opts[:changeset], struct, %{})
 
     {:ok,
