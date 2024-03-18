@@ -18,7 +18,11 @@ defmodule FilamentWeb.Filament.Resourcces.Pets do
             "rabbit" => "Rabbit"
           }
         },
-        :date_of_birth
+        :date_of_birth,
+        %{
+          name: :owner_id,
+          value: :name
+        }
       ],
       changeset: :name_changeset
     }

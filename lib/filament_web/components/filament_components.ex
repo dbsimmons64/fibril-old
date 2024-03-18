@@ -1,10 +1,26 @@
 defmodule FilamentWeb.FilamentComponents do
+  require Ecto.Query
   use Phoenix.Component
   import FilamentWeb.CoreComponents
+  alias Filament.Repo
 
   def filament_input(%{type: :text} = assigns) do
     ~H"""
     <.input field={@field} type="text" label={@label} />
+    """
+  end
+
+  def filament_input(%{type: :association} = assigns) do
+    # struct = apply(assigns.filament.association, :__struct__, [])
+    name = assigns.filament.value
+
+    options =
+      assigns.filament.association.queryable
+      |> Ecto.Query.select([a], {field(a, ^name), a.id})
+      |> Repo.all()
+
+    ~H"""
+    <.input field={@field} type="select" options={options} label={@label} />
     """
   end
 
@@ -21,13 +37,10 @@ defmodule FilamentWeb.FilamentComponents do
   end
 
   def set_label(field) do
-    dbg(field)
     field[:label] || create_label(field.name)
   end
 
   def create_label(name) do
-    dbg(name)
-
     name
     |> Atom.to_string()
     |> String.capitalize()

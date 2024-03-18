@@ -7,6 +7,8 @@ defmodule Filament.Repo.Migrations.CreatePets do
       add :date_of_birth, :date
       add :type, :string
 
+      add :owner_id, references(:owners)
+
       timestamps(type: :utc_datetime)
     end
   end
