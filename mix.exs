@@ -1,9 +1,9 @@
-defmodule Filament.MixProject do
+defmodule Fibril.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :filament,
+      app: :fibril,
       version: "0.1.0",
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -12,7 +12,7 @@ defmodule Filament.MixProject do
       deps: deps(),
 
       # Docs
-      name: "Filament Admin Generator",
+      name: "Fibril Admin Generator",
       source_url: "https://github.com/USER/PROJECT",
       homepage_url: "http://YOUR_PROJECT_HOMEPAGE",
       docs: [
@@ -26,7 +26,7 @@ defmodule Filament.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {Filament.Application, []},
+      mod: {Fibril.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end
@@ -83,10 +83,10 @@ defmodule Filament.MixProject do
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
-      "assets.build": ["tailwind filament", "esbuild filament"],
+      "assets.build": ["tailwind fibril", "esbuild fibril"],
       "assets.deploy": [
-        "tailwind filament --minify",
-        "esbuild filament --minify",
+        "tailwind fibril --minify",
+        "esbuild fibril --minify",
         "phx.digest"
       ]
     ]

@@ -1,4 +1,4 @@
-defmodule Filament.Repo.Migrations.CreateTreatments do
+defmodule Fibril.Repo.Migrations.CreateTreatments do
   use Ecto.Migration
 
   def change do

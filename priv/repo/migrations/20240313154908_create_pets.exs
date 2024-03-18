@@ -1,4 +1,4 @@
-defmodule Filament.Repo.Migrations.CreatePets do
+defmodule Fibril.Repo.Migrations.CreatePets do
   use Ecto.Migration
 
   def change do

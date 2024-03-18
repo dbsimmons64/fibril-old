@@ -1,4 +1,4 @@
-# Filament
+# Fibril
 
 To start your Phoenix server:
 

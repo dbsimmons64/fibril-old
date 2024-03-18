@@ -8,8 +8,8 @@ const path = require("path")
 module.exports = {
   content: [
     "./js/**/*.js",
-    "../lib/filament_web.ex",
-    "../lib/filament_web/**/*.*ex"
+    "../lib/fibril_web.ex",
+    "../lib/fibril_web/**/*.*ex"
   ],
   theme: {
     extend: {

@@ -7,19 +7,19 @@
 # General application configuration
 import Config
 
-config :filament,
-  ecto_repos: [Filament.Repo],
+config :fibril,
+  ecto_repos: [Fibril.Repo],
   generators: [timestamp_type: :utc_datetime]
 
 # Configures the endpoint
-config :filament, FilamentWeb.Endpoint,
+config :fibril, FibrilWeb.Endpoint,
   url: [host: "localhost"],
   adapter: Bandit.PhoenixAdapter,
   render_errors: [
-    formats: [html: FilamentWeb.ErrorHTML, json: FilamentWeb.ErrorJSON],
+    formats: [html: FibrilWeb.ErrorHTML, json: FibrilWeb.ErrorJSON],
     layout: false
   ],
-  pubsub_server: Filament.PubSub,
+  pubsub_server: Fibril.PubSub,
   live_view: [signing_salt: "LM4rqyaP"]
 
 # Configures the mailer
@@ -29,12 +29,12 @@ config :filament, FilamentWeb.Endpoint,
 #
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
-config :filament, Filament.Mailer, adapter: Swoosh.Adapters.Local
+config :fibril, Fibril.Mailer, adapter: Swoosh.Adapters.Local
 
 # Configure esbuild (the version is required)
 config :esbuild,
   version: "0.17.11",
-  filament: [
+  fibril: [
     args:
       ~w(js/app.js --bundle --target=es2017 --outdir=../priv/static/assets --external:/fonts/* --external:/images/*),
     cd: Path.expand("../assets", __DIR__),
@@ -44,7 +44,7 @@ config :esbuild,
 # Configure tailwind (the version is required)
 config :tailwind,
   version: "3.4.0",
-  filament: [
+  fibril: [
     args: ~w(
       --config=tailwind.config.js
       --input=css/app.css

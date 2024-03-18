@@ -1,7 +1,7 @@
-defmodule Filament.PetsFixtures do
+defmodule Fibril.PetsFixtures do
   @moduledoc """
   This module defines test helpers for creating
-  entities via the `Filament.Pets` context.
+  entities via the `Fibril.Pets` context.
   """
 
   @doc """
@@ -14,7 +14,7 @@ defmodule Filament.PetsFixtures do
         date_of_birth: ~D[2024-03-12],
         name: "some name"
       })
-      |> Filament.Pets.create_pet()
+      |> Fibril.Pets.create_pet()
 
     pet
   end

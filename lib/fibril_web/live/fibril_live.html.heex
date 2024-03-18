@@ -1,0 +1,21 @@
+<div>
+  <.header>
+    <%= @title %>
+    <:subtitle>Use this form to manage pet records in your database.</:subtitle>
+  </.header>
+
+  <.simple_form for={@form} id="fibril-form" phx-change="validate" phx-submit="save">
+    <%= for field <- @fields do %>
+      <%!-- <.input field={@form[field.name]} type={field.html_type} label="Something" /> --%>
+      <.fibril_input
+        field={@form[field.name]}
+        type={field.html_type}
+        fibril={field}
+        label={set_label(field)}
+      />
+    <% end %>
+    <:actions>
+      <.button phx-disable-with="Saving...">Save Pet</.button>
+    </:actions>
+  </.simple_form>
+</div>

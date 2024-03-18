@@ -1,4 +1,4 @@
-defmodule Filament.Repo.Migrations.CreateOwners do
+defmodule Fibril.Repo.Migrations.CreateOwners do
   use Ecto.Migration
 
   def change do

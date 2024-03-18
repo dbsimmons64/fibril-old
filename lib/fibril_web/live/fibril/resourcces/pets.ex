@@ -1,10 +1,12 @@
-Fibril is a library that was heavily inspired by its namesake in the PHP world. 
+defmodule FibrilWeb.Fibril.Resourcces.Pets do
+  import Ecto.Query, warn: false
 
-This section is basicallly to note down all my ideas so I don't forget them.
+  def welcome() do
+    "Hello from Pets"
+  end
 
-Example of a Form
-```
-%{
+  def options() do
+    %{
       module: Fibril.Pets.Pet,
       fields: [
         :name,
@@ -27,4 +29,12 @@ Example of a Form
       ],
       changeset: :name_changeset
     }
-```
+  end
+
+  def not_first() do
+    from(
+      a in Fibril.Owners.Owner,
+      where: a.id > 1
+    )
+  end
+end
