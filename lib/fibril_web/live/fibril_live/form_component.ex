@@ -103,6 +103,7 @@ defmodule FibrilWeb.FibrilLive.FormComponent do
       attrs
     )
     |> Repo.insert()
+    |> Fibril.Helpers.preload(socket.assigns.opts.preloads)
   end
 
   defp assign_form(socket, %Ecto.Changeset{} = changeset) do

@@ -28,3 +28,6 @@ Example of a Form
       changeset: :name_changeset
     }
 ```
+
+A note about `preloads`. 
+A the moment you need to ensure that both table and form have the same preloads. This is because when we create a new resource, for example a Pet, we return to the Pet List. The newly created resource is added to the resource stream and the list resource page is displayed. If the list resource page has reference to a association e.g. the Pet Owner, then it will fail unless the Owner resource is loaded.

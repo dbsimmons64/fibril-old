@@ -13,6 +13,7 @@ defmodule FibrilWeb.Fibril.Resourcces.Pets do
       fields: [
         :name,
         :date_of_birth,
+        :type,
         [:owner, :name]
       ],
       preloads: [
@@ -45,7 +46,8 @@ defmodule FibrilWeb.Fibril.Resourcces.Pets do
           value: :name
         }
       ],
-      changeset: :name_changeset
+      changeset: :name_changeset,
+      preloads: [:owner]
     }
   end
 
