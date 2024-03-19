@@ -35,7 +35,9 @@ defmodule Fibril.Pets do
       ** (Ecto.NoResultsError)
 
   """
-  def get_pet!(id), do: Repo.get!(Pet, id)
+  def get_pet!(id) do
+    Repo.get!(Pet, id) |> Repo.preload([:owner])
+  end
 
   @doc """
   Creates a pet.

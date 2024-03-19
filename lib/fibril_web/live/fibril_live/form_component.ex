@@ -1,21 +1,59 @@
-defmodule FibrilWeb.FibrilLive do
-  use FibrilWeb, :live_view
+defmodule FibrilWeb.FibrilLive.FormComponent do
+  use FibrilWeb, :live_component
 
-  alias Fibril.Repo
   alias Fibril.Schema
 
+  alias Fibril.Repo
+
   @impl true
-  @spec mount(any(), any(), map()) :: {:ok, map()}
-  def mount(%{"resource" => resource}, _session, socket) do
-    module = Module.concat(["FibrilWeb.Fibril.Resourcces", resource])
-    opts = apply(module, :options, [])
+  def render(assigns) do
+    ~H"""
+    <div>
+      <.header>
+        <%= @title %>
+        <:subtitle>Use this form to manage pet records in your database.</:subtitle>
+      </.header>
+
+      <.simple_form
+        for={@form}
+        id="fibril-form"
+        phx-target={@myself}
+        phx-change="validate"
+        phx-submit="save"
+      >
+        <%= for field <- @fields do %>
+          <%!-- <.input field={@form[field.name]} type={field.html_type} label="Something" /> --%>
+          <.fibril_input
+            field={@form[field.name]}
+            type={field.html_type}
+            fibril={field}
+            label={set_label(field)}
+          />
+        <% end %>
+        <:actions>
+          <.button phx-disable-with="Saving...">Save Pet</.button>
+        </:actions>
+      </.simple_form>
+    </div>
+    """
+  end
+
+  @impl true
+  def update(%{record: record} = assigns, socket) do
+    IO.puts("Update called!!!!!!!!!!!!!!!!!!!")
+
+    module =
+      Module.concat(["FibrilWeb.Fibril.Resourcces", String.capitalize(assigns.resources)])
+
+    opts = apply(module, :options, []) |> dbg()
 
     struct = Schema.get_struct(opts.module)
     fields = Schema.get_metadata_for_fields(opts.fields, opts.module)
-    changeset = Schema.get_changeset(opts.module, opts[:changeset], struct, %{})
+    changeset = Schema.get_changeset(opts.module, opts[:changeset], record, %{})
 
     {:ok,
      socket
+     |> assign(assigns)
      |> assign(:title, "Welcome to Pets Admin")
      |> assign(:fields, fields)
      |> assign(:form, to_form(changeset, as: "fibril"))
@@ -45,7 +83,7 @@ defmodule FibrilWeb.FibrilLive do
   defp save_resource(socket, :new, fibril_params) do
     case create_resource(socket, fibril_params) do
       {:ok, resource} ->
-        #  notify_parent({:saved, pet})
+        notify_parent({:saved, resource})
 
         {:noreply,
          socket
@@ -70,4 +108,6 @@ defmodule FibrilWeb.FibrilLive do
   defp assign_form(socket, %Ecto.Changeset{} = changeset) do
     assign(socket, :form, to_form(changeset))
   end
+
+  defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
 end

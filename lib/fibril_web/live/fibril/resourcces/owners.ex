@@ -9,4 +9,13 @@ defmodule FibrilWeb.Fibril.Resourcces.Owners do
       fields: [:name]
     }
   end
+
+  def table() do
+    %{
+      module: Fibril.Owners.Owner,
+      resource: "owner",
+      resources: "owners",
+      fields: [:name, :id]
+    }
+  end
 end

@@ -8,9 +8,15 @@ defmodule FibrilWeb.Fibril.Resourcces.Pets do
   def table() do
     %{
       module: Fibril.Pets.Pet,
+      resource: "pet",
+      resources: "pets",
       fields: [
         :name,
-        :date_of_birth
+        :date_of_birth,
+        [:owner, :name]
+      ],
+      preloads: [
+        :owner
       ]
     }
   end
@@ -18,6 +24,8 @@ defmodule FibrilWeb.Fibril.Resourcces.Pets do
   def options() do
     %{
       module: Fibril.Pets.Pet,
+      resource: "pet",
+      resources: "pets",
       fields: [
         :name,
         %{

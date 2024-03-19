@@ -2,27 +2,22 @@ defmodule FibrilWeb.FibrilLive.Index do
   use FibrilWeb, :live_view
 
   alias Fibril.Pets
-  alias Fibril.Pets.Pet
   alias Fibril.Schema
   alias Fibril.Fibril
 
   @impl true
   def mount(%{"resource" => resource}, _session, socket) do
-    # {:ok, stream(socket, :pets, Pets.list_pets())}
-
     module = Module.concat(["FibrilWeb.Fibril.Resourcces", String.capitalize(resource)])
-    table = apply(module, :table, [])
 
-    table = Map.put(table, :name, resource)
-    # struct = Schema.get_struct(table.module)
-    # fields = Schema.get_metadata_for_fields(table.fields, table.module) |> dbg
+    table = apply(module, :table, [])
 
     {:ok,
      socket
-     |> assign(:name, table.name)
+     |> assign(:resource, table.resource)
+     |> assign(:resources, table.resources)
      |> assign(:fields, table.fields)
      |> assign(:module, module)
-     |> stream(:resources, Fibril.list_resources(table.module, table[:preloads]))}
+     |> stream(:records, Fibril.list_records(table.module, table[:preloads]))}
   end
 
   @impl true
@@ -41,16 +36,18 @@ defmodule FibrilWeb.FibrilLive.Index do
   end
 
   defp apply_action(socket, :new, _params) do
-    IO.puts("NEW called!!!!!!")
+    table = apply(socket.assigns.module, :options, [])
+
+    Schema.get_struct(table.module)
 
     socket
     |> assign(:page_title, "New Pet")
-    |> assign(:pet, %Pet{})
+    |> assign(:record, Schema.get_struct(table.module))
   end
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "Listing Pets")
+    |> assign(:page_title, "Listing #{socket.assigns.resources}")
     |> assign(:pet, nil)
   end
 
@@ -60,10 +57,24 @@ defmodule FibrilWeb.FibrilLive.Index do
   end
 
   @impl true
+  def handle_info({FibrilWeb.FibrilLive.FormComponent, {:saved, record}}, socket) do
+    {:noreply, stream_insert(socket, :records, record)}
+  end
+
+  @impl true
   def handle_event("delete", %{"id" => id}, socket) do
     pet = Pets.get_pet!(id)
     {:ok, _} = Pets.delete_pet(pet)
 
     {:noreply, stream_delete(socket, :pets, pet)}
+  end
+
+  def fetch_data(record, fields) when is_list(fields) do
+    keys = Enum.map(fields, fn field -> Access.key(field, %{}) end)
+    get_in(record, keys)
+  end
+
+  def fetch_data(record, field) do
+    Map.get(record, field)
   end
 end

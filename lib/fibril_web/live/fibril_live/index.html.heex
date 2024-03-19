@@ -1,14 +1,31 @@
 <.header>
   Listing Pets
   <:actions>
-    <.link patch={~p"/admin/pet/new"}>
-      <.button>New <%= @name %></.button>
+    <.link patch={~p"/admin/#{@resources}/new"}>
+      <.button>New <%= @resource %></.button>
     </.link>
   </:actions>
 </.header>
 
-<.table id="pets" rows={@streams.resources}>
-  <:col :let={{_id, resource}} :for={field <- @fields} label="Name">
-    <%= Map.get(resource, field) %>
+<.table id="pets" rows={@streams.records}>
+  <:col :let={{_id, record}} :for={field <- @fields} label="Name">
+    <%= fetch_data(record, field) %>
   </:col>
 </.table>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id={"#{@resource}-modal"}
+  show
+  on_cancel={JS.patch(~p"/admin/#{@resources}")}
+>
+  <.live_component
+    module={FibrilWeb.FibrilLive.FormComponent}
+    resources={@resources}
+    id={@record.id || :new}
+    title={@page_title}
+    action={@live_action}
+    record={@record}
+    patch={~p"/admin/#{@resources}"}
+  />
+</.modal>
