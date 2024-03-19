@@ -7,7 +7,11 @@
   </:actions>
 </.header>
 
-<.table id="pets" rows={@streams.records}>
+<.table
+  id="pets"
+  rows={@streams.records}
+  row_click={fn {_id, pet} -> JS.navigate(~p"/admin/#{@resources}/#{pet}/edit") end}
+>
   <:col :let={{_id, record}} :for={field <- @fields} label="Name">
     <%= fetch_data(record, field) %>
   </:col>

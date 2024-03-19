@@ -3,7 +3,6 @@ defmodule FibrilWeb.FibrilLive.Index do
 
   alias Fibril.Pets
   alias Fibril.Schema
-  alias Fibril.Fibril
 
   @impl true
   def mount(%{"resource" => resource}, _session, socket) do
@@ -17,7 +16,7 @@ defmodule FibrilWeb.FibrilLive.Index do
      |> assign(:resources, table.resources)
      |> assign(:fields, table.fields)
      |> assign(:module, module)
-     |> stream(:records, Fibril.list_records(table.module, table[:preloads]))}
+     |> stream(:records, Fibril.Fibril.list_records(table.module, table[:preloads]))}
   end
 
   @impl true
@@ -30,9 +29,12 @@ defmodule FibrilWeb.FibrilLive.Index do
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
+    table = apply(socket.assigns.module, :options, [])
+    record = Fibril.Repo.get!(table.module, id)
+
     socket
     |> assign(:page_title, "Edit Pet")
-    |> assign(:pet, Pets.get_pet!(id))
+    |> assign(:record, record)
   end
 
   defp apply_action(socket, :new, _params) do
@@ -49,11 +51,6 @@ defmodule FibrilWeb.FibrilLive.Index do
     socket
     |> assign(:page_title, "Listing #{socket.assigns.resources}")
     |> assign(:pet, nil)
-  end
-
-  @impl true
-  def handle_info({FibrilWeb.PetLive.FormComponent, {:saved, pet}}, socket) do
-    {:noreply, stream_insert(socket, :pets, pet)}
   end
 
   @impl true

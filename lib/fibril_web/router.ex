@@ -28,6 +28,7 @@ defmodule FibrilWeb.Router do
     # live "/admin/:resource", FibrilLive
     live "/admin/:resource", FibrilLive.Index, :index
     live "/admin/:resource/new", FibrilLive.Index, :new
+    live "/admin/:resource/:id/edit", FibrilLive.Index, :edit
   end
 
   # Other scopes may use custom stacks.

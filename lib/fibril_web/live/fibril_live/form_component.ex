@@ -22,7 +22,6 @@ defmodule FibrilWeb.FibrilLive.FormComponent do
         phx-submit="save"
       >
         <%= for field <- @fields do %>
-          <%!-- <.input field={@form[field.name]} type={field.html_type} label="Something" /> --%>
           <.fibril_input
             field={@form[field.name]}
             type={field.html_type}
@@ -40,8 +39,6 @@ defmodule FibrilWeb.FibrilLive.FormComponent do
 
   @impl true
   def update(%{record: record} = assigns, socket) do
-    IO.puts("Update called!!!!!!!!!!!!!!!!!!!")
-
     module =
       Module.concat(["FibrilWeb.Fibril.Resourcces", String.capitalize(assigns.resources)])
 
@@ -76,8 +73,23 @@ defmodule FibrilWeb.FibrilLive.FormComponent do
   end
 
   def handle_event("save", %{"fibril" => fibril_params}, socket) do
-    # save_resource(socket, socket.assigns.action, fibril_params)
-    save_resource(socket, :new, fibril_params)
+    save_resource(socket, socket.assigns.action, fibril_params)
+    # save_resource(socket, :new, fibril_params)
+  end
+
+  defp save_resource(socket, :edit, fibril_params) do
+    case update_resource(socket, fibril_params) do
+      {:ok, resource} ->
+        notify_parent({:saved, resource})
+
+        {:noreply,
+         socket
+         |> put_flash(:info, "Pet updated successfully")
+         |> push_patch(to: socket.assigns.patch)}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign_form(socket, changeset)}
+    end
   end
 
   defp save_resource(socket, :new, fibril_params) do
@@ -103,6 +115,17 @@ defmodule FibrilWeb.FibrilLive.FormComponent do
       attrs
     )
     |> Repo.insert()
+    |> Fibril.Helpers.preload(socket.assigns.opts.preloads)
+  end
+
+  def update_resource(socket, attrs \\ %{}) do
+    Schema.get_changeset(
+      socket.assigns.opts.module,
+      socket.assigns.opts[:changeset],
+      socket.assigns.record,
+      attrs
+    )
+    |> Repo.update()
     |> Fibril.Helpers.preload(socket.assigns.opts.preloads)
   end
 
