@@ -5,6 +5,16 @@ defmodule FibrilWeb.Fibril.Resourcces.Pets do
     "Hello from Pets"
   end
 
+  def table() do
+    %{
+      module: Fibril.Pets.Pet,
+      fields: [
+        :name,
+        :date_of_birth
+      ]
+    }
+  end
+
   def options() do
     %{
       module: Fibril.Pets.Pet,

@@ -1,0 +1,14 @@
+<.header>
+  Listing Pets
+  <:actions>
+    <.link patch={~p"/admin/pet/new"}>
+      <.button>New <%= @name %></.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="pets" rows={@streams.resources}>
+  <:col :let={{_id, resource}} :for={field <- @fields} label="Name">
+    <%= Map.get(resource, field) %>
+  </:col>
+</.table>

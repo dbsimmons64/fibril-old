@@ -44,7 +44,7 @@ defmodule FibrilWeb.FibrilComponents do
 
     query =
       if assigns.fibril[:queryable] do
-        assigns.fibril.queryable.() |> dbg()
+        assigns.fibril.queryable.()
       else
         assigns.fibril.assocation.queryable
       end
@@ -52,6 +52,5 @@ defmodule FibrilWeb.FibrilComponents do
     query
     |> Ecto.Query.select([a], {field(a, ^name), a.id})
     |> Repo.all()
-    |> dbg
   end
 end
