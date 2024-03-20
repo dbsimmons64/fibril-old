@@ -112,9 +112,11 @@ defmodule FibrilWeb.FibrilLive.FormComponent do
   end
 
   def create_resource(socket, attrs \\ %{}) do
+    table = apply(socket.assigns.configuration, :table, [])
+
     Resource.get_changeset(socket.assigns.configuration, attrs)
     |> Repo.insert()
-    |> Fibril.Helpers.preload(socket.assigns.opts.preloads)
+    |> Fibril.Helpers.preload(table[:preloads])
   end
 
   def update_resource(socket, attrs \\ %{}) do

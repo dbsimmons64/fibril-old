@@ -11,7 +11,7 @@ defmodule FibrilWeb.Fibril.Resourcces.Owners do
 
   def table() do
     %{
-      fields: [:name, :id]
+      fields: [:name]
     }
   end
 end

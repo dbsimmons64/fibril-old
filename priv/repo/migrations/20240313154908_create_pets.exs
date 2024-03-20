@@ -7,7 +7,7 @@ defmodule Fibril.Repo.Migrations.CreatePets do
       add :date_of_birth, :date
       add :type, :string
 
-      add :owner_id, references(:owners)
+      add :owner_id, references(:owners, on_delete: :delete_all)
 
       timestamps(type: :utc_datetime)
     end

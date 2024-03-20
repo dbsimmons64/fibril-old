@@ -6,6 +6,10 @@ defmodule Fibril.Helpers do
     INSERT or UPDATE as there is no way to do a preload as part of these
     functions.
   """
+  def preload({:ok, entity}, nil) do
+    {:ok, entity}
+  end
+
   def preload({:ok, entity}, preloads) do
     {:ok, Repo.preload(entity, preloads, force: true)}
   end
