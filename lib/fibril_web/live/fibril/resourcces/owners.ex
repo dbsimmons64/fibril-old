@@ -1,20 +1,16 @@
 defmodule FibrilWeb.Fibril.Resourcces.Owners do
-  def welcome() do
-    "Hello from Owners"
+  def resource do
+    %{module: Fibril.Owners.Owner, name: "owner", plural: "owners"}
   end
 
-  def options() do
+  def form() do
     %{
-      module: Fibril.Owners.Owner,
       fields: [:name]
     }
   end
 
   def table() do
     %{
-      module: Fibril.Owners.Owner,
-      resource: "owner",
-      resources: "owners",
       fields: [:name, :id]
     }
   end

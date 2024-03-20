@@ -2,54 +2,50 @@ defmodule FibrilWeb.FibrilLive.Index do
   use FibrilWeb, :live_view
 
   alias Fibril.Pets
+  alias Fibril.Resource
   alias Fibril.Schema
 
   @impl true
   def mount(%{"resource" => resource}, _session, socket) do
-    module = Module.concat(["FibrilWeb.Fibril.Resourcces", String.capitalize(resource)])
+    configuration = Module.concat(["FibrilWeb.Fibril.Resourcces", String.capitalize(resource)])
 
-    table = apply(module, :table, [])
+    resource = apply(configuration, :resource, [])
+    table = apply(configuration, :table, [])
 
     {:ok,
      socket
-     |> assign(:resource, table.resource)
-     |> assign(:resources, table.resources)
+     |> assign(:configuration, configuration)
+     |> assign(resource: resource)
      |> assign(:fields, table.fields)
-     |> assign(:module, module)
-     |> stream(:records, Fibril.Fibril.list_records(table.module, table[:preloads]))}
+     |> stream(:records, Resource.list_records(resource.module, table[:preloads]))}
   end
 
   @impl true
-  @spec handle_params(any(), any(), %{
-          :assigns => atom() | %{:live_action => :edit | :index | :new, optional(any()) => any()},
-          optional(any()) => any()
-        }) :: {:noreply, map()}
   def handle_params(params, _url, socket) do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
-    table = apply(socket.assigns.module, :options, [])
-    record = Fibril.Repo.get!(table.module, id)
+    resource = apply(socket.assigns.configuration, :resource, [])
+    record = Fibril.Repo.get!(resource.module, id)
 
     socket
-    |> assign(:page_title, "Edit Pet")
+    |> assign(:page_title, "Edit #{String.capitalize(resource.name)}")
+    |> assign(resource: resource)
     |> assign(:record, record)
   end
 
   defp apply_action(socket, :new, _params) do
-    table = apply(socket.assigns.module, :options, [])
-
-    Schema.get_struct(table.module)
+    resource = apply(socket.assigns.configuration, :resource, [])
 
     socket
-    |> assign(:page_title, "New Pet")
-    |> assign(:record, Schema.get_struct(table.module))
+    |> assign(:page_title, "New #{String.capitalize(resource.name)}")
+    |> assign(:record, Schema.get_struct(resource.module))
   end
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "Listing #{socket.assigns.resources}")
+    |> assign(:page_title, "Listing #{socket.assigns.resource.plural}")
     |> assign(:pet, nil)
   end
 
@@ -60,10 +56,12 @@ defmodule FibrilWeb.FibrilLive.Index do
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
-    pet = Pets.get_pet!(id)
-    {:ok, _} = Pets.delete_pet(pet)
+    resource = apply(socket.assigns.configuration, :resource, [])
+    record = Fibril.Repo.get!(resource.module, id)
 
-    {:noreply, stream_delete(socket, :pets, pet)}
+    {:ok, _} = Fibril.Repo.delete(record)
+
+    {:noreply, stream_delete(socket, :records, record)}
   end
 
   def fetch_data(record, fields) when is_list(fields) do

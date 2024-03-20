@@ -1,28 +1,11 @@
 defmodule FibrilWeb.Fibril.Resourcces.Pets do
   import Ecto.Query, warn: false
 
-  def welcome() do
-    "Hello from Pets"
+  def resource do
+    %{module: Fibril.Pets.Pet, name: "pet", plural: "pets"}
   end
 
   def table() do
-    %{
-      module: Fibril.Pets.Pet,
-      resource: "pet",
-      resources: "pets",
-      fields: [
-        :name,
-        :date_of_birth,
-        :type,
-        [:owner, :name]
-      ],
-      preloads: [
-        :owner
-      ]
-    }
-  end
-
-  def options() do
     %{
       module: Fibril.Pets.Pet,
       resource: "pet",
